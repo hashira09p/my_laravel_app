@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreAuthorRequest;
 use App\Models\Author;
 
 class AuthorController extends Controller
@@ -33,25 +34,26 @@ class AuthorController extends Controller
 
     public function show(string $id)
     {
-        $author = new Author();
-        $author->name = $request->input('name');
-        $author->birth_date = $request->input('birth_date');
-
-        if($author->update()){
-            return redirect()->route('authors.index')->with('notice', 'Update Successfully');
-        }else{
-            return redirect()->route('authors.edit')->with('alert', 'Failed to Update');
-        };
+        
     }
 
-    public function edit(string $id)
+    public function edit($id)
     {
-        //
+        $author = Author::findOrFail($id);
+        return view('authors.edit', compact('author'));
     }
 
     public function update(Request $request, string $id)
     {
-        //
+        $author = Author::findOrFail($id);
+        $author->name = $request->input('name');
+        $author->birth_date = $request->input('birth_date');
+
+        if($author->save()){
+            return redirect()->route('authors.index')->with('notice', 'Update Successfully');
+        }else{
+            return redirect()->route('authors.edit', $id)->with('alert', 'Failed to Update');
+        };
     }
 
     /**
