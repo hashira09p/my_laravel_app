@@ -26,6 +26,10 @@
                             <button type="submit" class="btn btn-success">Save Author</button>
                         </div>
                     </form>
+
+                    <div class="mt-3 text-center">
+                        <a href="{{ route('authors.index') }}" class="btn btn-secondary">← Back to Authors</a>
+                    </div>
                 </div>
             </div>
         </div>
