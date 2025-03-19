@@ -12,9 +12,16 @@ class BookController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $books = Book::All();
+        $query = Book::query();
+
+        if ($request->has('search')) {
+            $query->where('title', 'like', '%' . $request->search . '%');
+        }
+
+        $books = $query->paginate(10);
+
         return view('books.index', compact('books'));
     }
 
@@ -22,7 +29,7 @@ class BookController extends Controller
      * Show the form for creating a new resource.
      */
     public function create()
-    { 
+    {
         $authors = Author::All();
         return view('books.create', compact('authors'));
     }
@@ -31,17 +38,14 @@ class BookController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(StoreBookRequest $request)
-    {   
-        $book = new Book();
-        $book->author_id = $request->input('author_id');
-        $book->title = $request->input('title');
-        $book->published_date = $request->input('published_date');
-        
-        if($book->save()){
-            return redirect()->route('books.index');
-        }else{
-            return redirect()->route('books.create');
-        };
+    {
+        $book = Book::create([
+            'author_id' => $request->author_id,
+            'title' => $request->title,
+            'published_date' => $request->published_date,
+        ]);
+
+        return response()->json(['message' => 'Book added successfully!', 'book' => $book], 200);
     }
 
     /**
@@ -49,17 +53,17 @@ class BookController extends Controller
      */
     public function show(string $id)
     {
-        
+
     }
 
     /**
      * Show the form for editing the specified resource.
      */
     public function edit(string $id)
-    {   
+    {
         $authors = Author::All();
         $book = Book::findOrFail($id);
-        return view('books.edit', compact('book','authors'));
+        return view('books.edit', compact('book', 'authors'));
     }
 
     /**
@@ -68,16 +72,18 @@ class BookController extends Controller
     public function update(StoreBookRequest $request, string $id)
     {
         $book = Book::findOrFail($id);
-        $book->title = $request->input('title');
-        $book->author_id = $request->input('author_id');
-        $book->published_date = $request->input('published_date');
+        $book->update($request->validated());
 
-        if($book->update()){
-            return redirect()->route('books.index');
-        }else{
-            return redirect()->route('books.edit', $id);
-        };
+        if ($request->ajax()) {
+            return response()->json([
+                'message' => 'Book updated successfully!',
+                'book' => $book
+            ], 200);
+        }
+
+        return redirect()->route('books.index')->with('success', 'Book updated successfully!');
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -86,7 +92,7 @@ class BookController extends Controller
     {
         $book = Book::findOrFail($id);
 
-        if($book->delete()){
+        if ($book->delete()) {
             return redirect()->route('books.index');
         }
     }
