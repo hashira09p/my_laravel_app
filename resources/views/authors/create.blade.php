@@ -44,10 +44,10 @@
     <script>
         $(document).ready(function () {
             $("#author-form").submit(function (event) {
-                event.preventDefault(); // Prevent default form submission
+                event.preventDefault();
 
-                $("#success-message").html(""); // Clear previous messages
-                $(".text-danger").html(""); // Clear error messages
+                $("#success-message").html("");
+                $(".text-danger").html("");
 
                 let formData = {
                     name: $("#name").val(),
@@ -55,10 +55,10 @@
                     _token: $('meta[name="csrf-token"]').attr("content")
                 };
 
-                console.log("Sending AJAX Request:", formData); // Debug log
+                console.log("Sending AJAX Request:", formData);
 
                 $.ajax({
-                    url: "{{ route('authors.store') }}", // Ensure this route exists
+                    url: "{{ route('authors.store') }}",
                     method: "POST",
                     data: formData,
                     dataType: "json",

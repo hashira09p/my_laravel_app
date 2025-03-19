@@ -49,14 +49,16 @@ class AuthorController extends Controller
     public function update(StoreAuthorRequest $request, string $id)
     {
         $author = Author::findOrFail($id);
-        $author->name = $request->input('name');
-        $author->birth_date = $request->input('birth_date');
+        $author->update($request->validated());
 
-        if ($author->save()) {
-            return redirect()->route('authors.index');
-        } else {
-            return redirect()->route('authors.edit', $id);
+        if ($request->ajax()) {
+            return response()->json([
+                'message' => 'Author updated successfully!',
+                'author' => $author
+            ], 200);
         }
+
+        return redirect()->route('authors.index')->with('success', 'Author updated successfully!');
     }
 
     /**
