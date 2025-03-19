@@ -1,11 +1,34 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1>Create Author</h1>
-    <form action="{{ route('authors.store') }}" method="POST">
-        @csrf
-        <input type="text" name="name" placeholder="Name" required>
-        <input type="date" name="birth_date" required>
-        <button type="submit">Save</button>
-    </form>
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Add Author</h4>
+                </div>
+                <div class="card-body">
+                    <form action="{{ route('authors.store') }}" method="POST">
+                        @csrf
+
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" name="name" id="name" class="form-control" placeholder="Enter author name">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="birth_date" class="form-label">Birth Date</label>
+                            <input type="date" name="birth_date" id="birth_date" class="form-control">
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success">Save Author</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
