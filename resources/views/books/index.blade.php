@@ -4,7 +4,17 @@
     <div class="container mt-4">
         <h1 class="mb-4">Books</h1>
 
-        <a href="{{ route('books.create') }}" class="btn btn-primary mb-3">Add New Book</a>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <form method="GET" action="{{ route('books.index') }}" class="d-flex">
+                <div class="input-group" style="max-width: 300px; width: 100%;">
+                    <input type="text" name="search" class="form-control" placeholder="Search Books"
+                        value="{{ request('search') }}">
+                    <button type="submit" class="btn btn-secondary">Search</button>
+                </div>
+            </form>
+
+            <a href="{{ route(name: 'books.create') }}" class="btn btn-primary">Add New Book</a>
+        </div>
 
         <div class="table-responsive">
             <table class="table table-bordered table-hover">
@@ -18,7 +28,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($books as $index => $book)
+                    @forelse($books as $index => $book)
                         <tr>
                             <td>{{ $index + 1 }}</td>
                             <td>{{ $book->title }}</td>
@@ -35,9 +45,17 @@
                                 </form>
                             </td>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="5" class="text-center text-muted">No books found.</td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
+        </div>
+
+        <div class="d-flex justify-content-center mt-3">
+            {{ $books->links('pagination::bootstrap-5') }}
         </div>
     </div>
 @endsection

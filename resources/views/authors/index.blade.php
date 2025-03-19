@@ -4,7 +4,17 @@
     <div class="container mt-4">
         <h1 class="mb-4">Authors</h1>
 
-        <a href="{{ route('authors.create') }}" class="btn btn-primary mb-3">Add Author</a>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <form method="GET" action="{{ route('authors.index') }}" class="d-flex">
+                <div class="input-group" style="max-width: 300px; width: 100%;">
+                    <input type="text" name="search" class="form-control" placeholder="Search Authors"
+                        value="{{ request('search') }}">
+                    <button type="submit" class="btn btn-secondary">Search</button>
+                </div>
+            </form>
+
+            <a href="{{ route('authors.create') }}" class="btn btn-primary">Add Author</a>
+        </div>
 
         <div class="table-responsive">
             <table class="table table-bordered table-hover">
@@ -17,7 +27,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($authors as $index => $author)
+                    @forelse($authors as $index => $author)
                         <tr>
                             <td>{{ $index + 1 }}</td>
                             <td>{{ $author->name }}</td>
@@ -33,9 +43,17 @@
                                 </form>
                             </td>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="4" class="text-center text-muted">No authors found.</td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
+        </div>
+
+        <div class="d-flex justify-content-center mt-3">
+            {{ $authors->links('pagination::bootstrap-5') }}
         </div>
     </div>
 @endsection
