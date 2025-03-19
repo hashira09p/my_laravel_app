@@ -8,9 +8,15 @@ use App\Models\Author;
 
 class AuthorController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $authors = Author::all();
+        $query = Author::query();
+
+        if ($request->has('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        $authors = $query->paginate(10);
         return view('authors.index', compact('authors'));
     }
 
@@ -21,20 +27,17 @@ class AuthorController extends Controller
 
     public function store(StoreAuthorRequest $request)
     {
-        $author = new Author();
-        $author->name = $request->input('name');
-        $author->birth_date = $request->input('birth_date');
+        $author = Author::create([
+            'name' => $request->name,
+            'birth_date' => $request->birth_date,
+        ]);
 
-        if($author->save()){
-            return redirect()->route('authors.index');
-        }else{
-            return redirect()->route('authors.create');
-        };
+        return response()->json(['message' => 'Author added successfully!', 'author' => $author], 200);
     }
 
     public function show(string $id)
     {
-        
+
     }
 
     public function edit($id)
@@ -49,11 +52,11 @@ class AuthorController extends Controller
         $author->name = $request->input('name');
         $author->birth_date = $request->input('birth_date');
 
-        if($author->save()){
+        if ($author->save()) {
             return redirect()->route('authors.index');
-        }else{
+        } else {
             return redirect()->route('authors.edit', $id);
-        };
+        }
     }
 
     /**
@@ -63,8 +66,8 @@ class AuthorController extends Controller
     {
         $author = Author::findOrFail($id);
 
-        if($author->delete()){
+        if ($author->delete()) {
             return redirect()->route('authors.index');
-        };
+        }
     }
 }
