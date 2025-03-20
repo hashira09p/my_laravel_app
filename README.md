@@ -48,19 +48,19 @@ Step 5: Setup Database
 1. Go to ENV file.
    
 2. Add this:
-    DB_CONNECTION=sqlite
-    DB_HOST=127.0.0.1
+    DB_CONNECTION=sqlite,
+    DB_HOST=127.0.0.1,
     DB_PORT=3306
     DB_DATABASE=database/database.sqlite
-    DB_USERNAME=root
-    DB_PASSWORD="qwer4321"
+    DB_USERNAME=root,
+    DB_PASSWORD="qwer4321",
    
 3 Type this commands: 
-    cp .env.example .env
-    php artisan key:generate
-    php artisan config:clear
-    php artisan cache:clear
-    php artisan db:seed
+    cp .env.example .env,
+    php artisan key:generate,
+    php artisan config:clear,
+    php artisan cache:clear,
+    php artisan db:seed,
     php artisan migrate:fresh --seed
    
 4. Run this command: php artisan migrate
